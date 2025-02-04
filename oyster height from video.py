@@ -1,8 +1,10 @@
 import cv2
 import numpy as np
+import os
+
 
 # Open the video
-video_path = r"C:\Users\jessi\Documents\research SM\videos\Video from ARC.MP4"
+video_path = os.path.join(os.path.dirname(__file__), "videos", "Video from ARC.mp4")
 cap = cv2.VideoCapture(video_path)
 
 if not cap.isOpened():
