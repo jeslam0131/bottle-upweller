@@ -2,9 +2,10 @@ import cv2
 import numpy as np
 import os
 
-
+## Cropping and rotations settings worked on my laptop but don't work on the pi (unclear why but not relevant to our usecase)
 # Open the video
-video_path = os.path.join(os.path.dirname(__file__), "videos", "Video from ARC.mp4")
+video_path = "/home/upweller/Desktop/Bottle_upweller/bottle-upweller/videos/Video from ARC.MP4" #(couldn't get relative path on pi work edit to local storage path) 
+#video_path = os.path.join(os.path.dirname(__file__), "videos", "Video from ARC.mp4") #(uncomment on Jess Laptop)
 cap = cv2.VideoCapture(video_path)
 
 if not cap.isOpened():
