@@ -33,14 +33,14 @@ def spin_motor(steps, delay=0.0000001):
 def forward():
     print("Moving Forward")
     GPIO.output(DIR_PIN, GPIO.LOW)
-    spin_motor(5000)  # 5000 steps, adjust based on your setup
+    spin_motor(1000)  # 5000 steps, adjust based on your setup
     print("Forward movement completed.")
 
 # Reverse direction (counterclockwise)
 def reverse():
     print("Moving Backward")
     GPIO.output(DIR_PIN, GPIO.HIGH)
-    spin_motor(5000)  # 5000 steps, adjust based on your setup
+    spin_motor(1000)  # 5000 steps, adjust based on your setup
     print("Backward movement completed.")
 
 try:
