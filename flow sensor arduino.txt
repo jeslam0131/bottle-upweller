@@ -1,0 +1,33 @@
+// Pin where the flow sensor signal wire is connected
+const byte flowSensorPin = 2; // must be interrupt-capable (D2 or D3 on Uno)
+volatile int pulseCount = 0;
+
+float calibrationFactor = 450.0; // pulses per liter (check your datasheet!)
+
+unsigned long oldTime = 0;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(flowSensorPin, INPUT_PULLUP); // assuming open-drain output
+  attachInterrupt(digitalPinToInterrupt(flowSensorPin), pulseCounter, FALLING);
+}
+
+void loop() {
+  if (millis() - oldTime > 1000) { // Every 1 second
+    detachInterrupt(digitalPinToInterrupt(flowSensorPin));
+
+    float flowRate = (pulseCount / calibrationFactor) * 60.0; // L/min
+    Serial.print("Flow Rate: ");
+    Serial.print(flowRate);
+    Serial.println(" L/min");
+
+    pulseCount = 0;
+    oldTime = millis();
+
+    attachInterrupt(digitalPinToInterrupt(flowSensorPin), pulseCounter, FALLING);
+  }
+}
+
+void pulseCounter() {
+  pulseCount++;
+}
