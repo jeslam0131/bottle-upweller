@@ -1,44 +1,30 @@
+#!/usr/bin/env python
+
 import RPi.GPIO as GPIO
-import time
+import time, sys
 
-# Set the GPIO mode
+FLOW_SENSOR = 23
+
 GPIO.setmode(GPIO.BCM)
+GPIO.setup(FLOW_SENSOR, GPIO.IN, pull_up_down = GPIO.PUD_UP)
 
-# Pin where the flow sensor is connected
-FLOW_SENSOR_PIN = 13
+global count
+count = 0
 
-# Set up the sensor pin as input
-GPIO.setup(FLOW_SENSOR_PIN, GPIO.IN)
+def countPulse(channel):
+   global count
+   count = count+1
+   print (count)
+   flow = count / (60 * 7.5)
+   print(flow)
 
-pulse_count = 0
+GPIO.add_event_detect(FLOW_SENSOR, GPIO.FALLING, callback=countPulse)
 
-# Function to count pulses
-def count_pulse(channel):
-    global pulse_count
-    pulse_count += 1
+while True:
+    try:
+        time.sleep(1)
 
-# Attach the interrupt to the flow sensor pin
-GPIO.add_event_detect(FLOW_SENSOR_PIN, GPIO.FALLING, callback=count_pulse)
-
-try:
-    while True:
-        pulse_count = 0
-        start_time = time.time()
-
-        # Wait for 1 minute
-        time.sleep(60)
-
-        end_time = time.time()
-
-        # Calculate the number of pulses in the last minute
-        pulses_per_minute = pulse_count
-
-        # Calculate the flow rate in L/min
-        flow_rate = pulses_per_minute / 450.0  # 450 pulses per liter
-
-        print(f"Flow rate: {flow_rate:.2f} L/min")
-
-except KeyboardInterrupt:
-    print("Program terminated.")
-finally:
-    GPIO.cleanup()
+    except KeyboardInterrupt:
+        print ('\ncaught keyboard interrupt!, bye')
+        GPIO.cleanup()
+        sys.exit()
