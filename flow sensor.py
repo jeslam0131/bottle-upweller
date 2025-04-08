@@ -1,30 +1,27 @@
-#!/usr/bin/env python
+import serial
+import time
 
-import RPi.GPIO as GPIO
-import time, sys
+# Configure the serial port
+port = "/dev/ttyUSB0"  # Replace with your actual serial port
+baudrate = 9600  # Replace with your device's baud rate
 
-FLOW_SENSOR = 23
+try:
+    ser = serial.Serial(port, baudrate, timeout=1)
+    time.sleep(2)  # Give the device time to initialize/reset if needed
+    ser.flushInput()
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(FLOW_SENSOR, GPIO.IN, pull_up_down = GPIO.PUD_UP)
+    print("Listening on serial port...")
+    while True:
+        if ser.in_waiting > 0:
+            data = ser.readline().decode('utf-8', errors='replace').rstrip()
+            print(data)
+        time.sleep(0.1)
 
-global count
-count = 0
-
-def countPulse(channel):
-   global count
-   count = count+1
-   print (count)
-   flow = count / (60 * 7.5)
-   print(flow)
-
-GPIO.add_event_detect(FLOW_SENSOR, GPIO.FALLING, callback=countPulse)
-
-while True:
-    try:
-        time.sleep(1)
-
-    except KeyboardInterrupt:
-        print ('\ncaught keyboard interrupt!, bye')
-        GPIO.cleanup()
-        sys.exit()
+except KeyboardInterrupt:
+    print("Interrupted by user")
+except serial.SerialException as e:
+    print(f"Serial error: {e}")
+finally:
+    if 'ser' in locals() and ser.is_open:
+        ser.close()
+        print("Serial port closed")
