@@ -1,0 +1,152 @@
+{
+    "boundaries": {
+        "curve_collection": {
+            "1": [
+                {
+                    "domain": "Time",
+                    "image": "Velocity : Translational : X",
+                    "type": "time_curve"
+                },
+                {
+                    "domain": "Time",
+                    "image": "Velocity : Translational : Y",
+                    "type": "time_curve"
+                },
+                {
+                    "domain": "Time",
+                    "image": "Velocity : Translational : Z",
+                    "type": "time_curve"
+                },
+                {
+                    "domain": "Time",
+                    "image": "Velocity : Rotational : X",
+                    "type": "time_curve"
+                },
+                {
+                    "domain": "Time",
+                    "image": "Velocity : Rotational : Y",
+                    "type": "time_curve"
+                },
+                {
+                    "domain": "Time",
+                    "image": "Velocity : Rotational : Z",
+                    "type": "time_curve"
+                }
+            ],
+            "3": [
+                {
+                    "domain": "Time",
+                    "image": "Velocity : Translational : X",
+                    "type": "time_curve"
+                },
+                {
+                    "domain": "Time",
+                    "image": "Velocity : Translational : Y",
+                    "type": "time_curve"
+                },
+                {
+                    "domain": "Time",
+                    "image": "Velocity : Translational : Z",
+                    "type": "time_curve"
+                },
+                {
+                    "domain": "Time",
+                    "image": "Velocity : Rotational : X",
+                    "type": "time_curve"
+                },
+                {
+                    "domain": "Time",
+                    "image": "Velocity : Rotational : Y",
+                    "type": "time_curve"
+                },
+                {
+                    "domain": "Time",
+                    "image": "Velocity : Rotational : Z",
+                    "type": "time_curve"
+                }
+            ]
+        },
+        "datasets": {
+            "1": [
+                {
+                    "dimension": 3.4074260661020688,
+                    "id": 0,
+                    "name": "Velocity : Translational : X",
+                    "unit": "m/s"
+                },
+                {
+                    "dimension": 3.4074260661020688,
+                    "id": 1,
+                    "name": "Velocity : Translational : Y",
+                    "unit": "m/s"
+                },
+                {
+                    "dimension": 3.4074260661020688,
+                    "id": 2,
+                    "name": "Velocity : Translational : Z",
+                    "unit": "m/s"
+                },
+                {
+                    "dimension": 48.677515230029556,
+                    "id": 3,
+                    "name": "Velocity : Rotational : X",
+                    "unit": "rad/s"
+                },
+                {
+                    "dimension": 48.677515230029556,
+                    "id": 4,
+                    "name": "Velocity : Rotational : Y",
+                    "unit": "rad/s"
+                },
+                {
+                    "dimension": 48.677515230029556,
+                    "id": 5,
+                    "name": "Velocity : Rotational : Z",
+                    "unit": "rad/s"
+                }
+            ],
+            "3": [
+                {
+                    "dimension": 3.4074260661020688,
+                    "id": 6,
+                    "name": "Velocity : Translational : X",
+                    "unit": "m/s"
+                },
+                {
+                    "dimension": 3.4074260661020688,
+                    "id": 7,
+                    "name": "Velocity : Translational : Y",
+                    "unit": "m/s"
+                },
+                {
+                    "dimension": 3.4074260661020688,
+                    "id": 8,
+                    "name": "Velocity : Translational : Z",
+                    "unit": "m/s"
+                },
+                {
+                    "dimension": 48.677515230029556,
+                    "id": 9,
+                    "name": "Velocity : Rotational : X",
+                    "unit": "rad/s"
+                },
+                {
+                    "dimension": 48.677515230029556,
+                    "id": 10,
+                    "name": "Velocity : Rotational : Y",
+                    "unit": "rad/s"
+                },
+                {
+                    "dimension": 48.677515230029556,
+                    "id": 11,
+                    "name": "Velocity : Rotational : Z",
+                    "unit": "rad/s"
+                }
+            ]
+        }
+    },
+    "number_of_datasets": 12,
+    "number_of_time_curves": 12,
+    "number_of_transient_curves": 0,
+    "version": 20210914
+}

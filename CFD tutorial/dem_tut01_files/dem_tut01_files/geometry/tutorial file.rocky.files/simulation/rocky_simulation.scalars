@@ -1,0 +1,16 @@
+{
+    "boundaries": {
+        "0": [],
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": []
+    },
+    "contacts": {
+        "particle": [],
+        "triangle": []
+    },
+    "joints": null,
+    "particles": null
+}

@@ -1,0 +1,24 @@
+{
+"version" : 20180913,
+"curves" : [
+["current_output", "Simulation Output Index", "-", "count"],
+["simulation_pace", "Simulation Pace", "s", "time"],
+["eta", "Simulation ETA", "s", "time"],
+["elapsed_execution_time", "Execution Total Time", "s", "time"],
+["io_fraction", "IO Fraction", "-", "percentage"],
+["n_neighbors", "Neighbor Count", "-", "count"],
+["neighbor_computation_fraction", "Neighbor Computation Fraction", "-", "percentage"],
+["n_frictional_contacts", "Contacts Frictional", "-", "count"],
+["n_frictional_particle_contacts", "Contacts Frictional Particle", "-", "count"],
+["n_frictional_triangle_contacts", "Contacts Frictional Geometry", "-", "count"],
+["n_adhesive_contacts", "Contacts Adhesive", "-", "count"],
+["n_adhesive_particle_contacts", "Contacts Adhesive Particle", "-", "count"],
+["n_adhesive_triangle_contacts", "Contacts Adhesive Geometry", "-", "count"],
+["n_particles", "Particles Total", "-", "count"],
+["n_enabled_particles", "Particles Enabled", "-", "count"],
+["n_released_particles", "Particles Released", "-", "count"],
+["work_mem", "CPU Memory Usage", "Byte", "computer binary memory"],
+["free_mem", "CPU Memory Free", "Byte", "computer binary memory"],
+["total_mem", "CPU Memory Total", "Byte", "computer binary memory"]
+]
+}

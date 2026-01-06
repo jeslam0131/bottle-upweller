@@ -1,0 +1,223 @@
+{
+    "Particles": {
+        "Mass Increment": true,
+        "Moment Of Inertia": true,
+        "Particle Mass": true,
+        "Particle Size": true,
+        "Poisson's Ratio": true,
+        "Rotational Velocity": true,
+        "Translational Velocity": true,
+        "System Released Time": true,
+        "System Residence Time": true,
+        "Volume Increment": true,
+        "Specific Heat": true,
+        "Temperature": true,
+        "Thermal Conductivity": true,
+        "Semi Resolved : Force : X": true,
+        "Semi Resolved : Force : Y": true,
+        "Semi Resolved : Force : Z": true,
+        "Semi Resolved : Moment : X": true,
+        "Semi Resolved : Moment : Y": true,
+        "Semi Resolved : Moment : Z": true
+    },
+    "SPH": {
+        "Density": true,
+        "Velocity": true,
+        "Turbulent Viscosity": true,
+        "Neighbors Count": true,
+        "Temperature": true,
+        "Refinement Count": true,
+        "Refinement Density Difference": true,
+        "Refinement Kernel Base": true
+    },
+    "Geometries": {
+        "Area : Cell": true,
+        "Area : Nodal": true,
+        "Poisson's Ratio": true,
+        "Cumulative Exchanged Heat Per Output": true,
+        "Specific Heat": true,
+        "Temperature": true,
+        "Thermal Conductivity": true,
+        "Wear Volume Loss": true
+    },
+    "CFD": {
+        "Cell Volume": true,
+        "Fluid Density": true,
+        "Fluid Turbulent Dissipation Rate": true,
+        "Fluid Turbulent Kinetic Energy": true,
+        "Fluid Velocity": true,
+        "Fluid Viscosity": true,
+        "Solid Volume Fraction": true,
+        "Solid Explicit Force": true,
+        "Solid Implicit Force": true,
+        "Solid Explicit Heat Transfer Rate": true,
+        "Solid Implicit Heat Transfer Rate": true,
+        "Fluid Specific Heat": true,
+        "Fluid Temperature": true,
+        "Fluid Thermal Conductivity": true
+    },
+    "Joints": {
+        "1st Bending Angular Displacement": true,
+        "2nd Bending Angular Displacement": true,
+        "Normal Displacement": true,
+        "Tangential Displacement": true,
+        "Torsional Angular Displacement": true
+    },
+    "Contacts": {
+        "Absolute Normal Force": true,
+        "Dynamic Friction Coefficient": true,
+        "Initial Contact Overlap": true,
+        "Is Frictional": true,
+        "Normal Adhesion Force": true,
+        "Normal Force": true,
+        "Normal Relative Velocity": true,
+        "Overlap": true,
+        "From and To Element IDs": true,
+        "Sliding Distance": true,
+        "Static Friction Coefficient": true,
+        "Tangential Adhesion Force": true,
+        "Tangential Force": true,
+        "Tangential Relative Velocity": true
+    },
+    "Frequency": 1,
+    "Modules": {
+        "SPH Boundary Interaction Statistics": {
+            "Particles": {},
+            "SPH": {},
+            "Geometries": {
+                "SPH : Force : Nodal : X": true,
+                "SPH : Force : Nodal : Y": true,
+                "SPH : Force : Nodal : Z": true,
+                "SPH : Stress : Normal": true,
+                "SPH : Stress : Tangential": true,
+                "SPH : Heat Transfer Rate": true,
+                "SPH : Wet Fraction": true,
+                "SPH : Wet Time": true
+            },
+            "CFD": {},
+            "Joints": {},
+            "Contacts": {}
+        },
+        "SPH HTC Calculator": {
+            "Particles": {},
+            "SPH": {},
+            "Geometries": {
+                "Heat Transfer Coefficient": true
+            },
+            "CFD": {},
+            "Joints": {},
+            "Contacts": {}
+        },
+        "Boundary Collision Statistics": {
+            "Particles": {},
+            "SPH": {},
+            "Geometries": {
+                "Frequency": true,
+                "Duration : Mean": true,
+                "Duration : Std. Dev.": true,
+                "Duration : Skewness": true,
+                "Duration : Kurtosis": true,
+                "Velocity : Impact : Normal : Mean": true,
+                "Velocity : Impact : Normal : Std. Dev.": true,
+                "Velocity : Impact : Normal : Skewness": true,
+                "Velocity : Impact : Normal : Kurtosis": true,
+                "Velocity : Impact : Tangential : Mean": true,
+                "Velocity : Impact : Tangential : Std. Dev.": true,
+                "Velocity : Impact : Tangential : Skewness": true,
+                "Velocity : Impact : Tangential : Kurtosis": true,
+                "Sliding Distance : Mean": true,
+                "Sliding Distance : Std. Dev.": true,
+                "Sliding Distance : Skewness": true,
+                "Sliding Distance : Kurtosis": true,
+                "Intensity : Dissipation": true,
+                "Intensity : Impact": true,
+                "Intensity : Shear": true,
+                "Intensity": true,
+                "Stress : Normal": true,
+                "Stress : Tangential": true,
+                "Stress : Adhesive": true,
+                "Force : Nodal : X": true,
+                "Force : Nodal : Y": true,
+                "Force : Nodal : Z": true
+            },
+            "CFD": {},
+            "Joints": {},
+            "Contacts": {}
+        },
+        "Intra-particle Collision Statistics": {
+            "Particles": {
+                "Frequency": true,
+                "Duration : Mean": true,
+                "Duration : Std. Dev.": true,
+                "Duration : Skewness": true,
+                "Duration : Kurtosis": true,
+                "Velocity : Impact : Normal : Mean": true,
+                "Velocity : Impact : Normal : Std. Dev.": true,
+                "Velocity : Impact : Normal : Skewness": true,
+                "Velocity : Impact : Normal : Kurtosis": true,
+                "Velocity : Impact : Tangential : Mean": true,
+                "Velocity : Impact : Tangential : Std. Dev.": true,
+                "Velocity : Impact : Tangential : Skewness": true,
+                "Velocity : Impact : Tangential : Kurtosis": true,
+                "Power : Dissipation": true,
+                "Power : Impact": true,
+                "Power : Shear": true,
+                "Force : Normal": true,
+                "Force : Tangential": true,
+                "Force : Adhesive": true
+            },
+            "SPH": {},
+            "Geometries": {},
+            "CFD": {},
+            "Joints": {},
+            "Contacts": {}
+        },
+        "Particle Instantaneous Energies": {
+            "Particles": {
+                "Energy : Kinetic : Translational": true,
+                "Energy : Kinetic : Rotational": true,
+                "Energy : Potential": true
+            },
+            "SPH": {},
+            "Geometries": {},
+            "CFD": {},
+            "Joints": {},
+            "Contacts": {}
+        },
+        "Joint Statistics": {
+            "Particles": {},
+            "SPH": {},
+            "Geometries": {},
+            "CFD": {},
+            "Joints": {
+                "Normal Force": true,
+                "Tangential Force": true,
+                "Torsional Moment": true,
+                "1st Bending Moment": true,
+                "2nd Bending Moment": true,
+                "Tensile Stress": true,
+                "Shear Stress": true,
+                "von Mises Stress": true
+            },
+            "Contacts": {}
+        },
+        "SPH-DEM Interaction Statistics": {
+            "Particles": {
+                "SPH: Fluid Force": true,
+                "SPH: Fluid Force: X": true,
+                "SPH: Fluid Force: Y": true,
+                "SPH: Fluid Force: Z": true,
+                "SPH: Flow-Induced Torque": true,
+                "SPH: Flow-Induced Torque: X": true,
+                "SPH: Flow-Induced Torque: Y": true,
+                "SPH: Flow-Induced Torque: Z": true,
+                "SPH: Heat Transfer Rate": true
+            },
+            "SPH": {},
+            "Geometries": {},
+            "CFD": {},
+            "Joints": {},
+            "Contacts": {}
+        }
+    }
+}
