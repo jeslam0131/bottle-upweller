@@ -1,4 +1,3 @@
-##nf!
 import numpy as np
 import cv2 as cv
 
@@ -6,6 +5,9 @@ video_path = r"C:\Users\angzh\OneDrive\Desktop\UROP IAP 2026\WIN_20260106_10_22_
 ##cap = cv.VideoCapture("WIN_20260106_10_22_59_Pro")
 ##cap = cv.VideoCapture(0)
 cap = cv.VideoCapture(video_path)
+
+###for ease? video_path = input("Enter video path: ")
+##cap = cv.VideoCapture(video_path)
 
 fps = cap.get(cv.CAP_PROP_FPS) #frames per second: pixels moved per frame --> pixels per second
 print("FPS:", fps)
@@ -21,7 +23,9 @@ frame = prvs.shape
 height = frame[0] ##height of frame
 width = frame[1] ##weight of frame
 
-n_slices = 20 ##horizontal slices
+n_slices = 20
+slice_height = height / n_slices
+
 
 hsv = np.zeros_like(frame1)
 hsv[..., 1] = 255
@@ -47,5 +51,3 @@ while(1):
     prvs = next
 
 cv.destroyAllWindows()
-
-
