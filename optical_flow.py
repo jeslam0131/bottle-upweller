@@ -20,8 +20,7 @@ frame = prvs.shape
 height = frame[0] ##height of frame
 width = frame[1] ##weight of frame
 
-n_slices = 20
-framee
+n_slices = 20 ##horizontal slices
 
 hsv = np.zeros_like(frame1)
 hsv[..., 1] = 255
@@ -47,3 +46,4 @@ while(1):
     prvs = next
 
 cv.destroyAllWindows()
+
