@@ -1,3 +1,4 @@
+##nf!
 import numpy as np
 import cv2 as cv
 
@@ -46,4 +47,5 @@ while(1):
     prvs = next
 
 cv.destroyAllWindows()
+
 
