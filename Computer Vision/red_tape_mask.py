@@ -4,7 +4,7 @@ import numpy as np
 # =============================
 # Video input
 # =============================
-VIDEO_PATH = r"C:\Users\jessi\MIT Dropbox\Jessica Lam\BUPSY stuff\Test Videos for Optical Flow\Flow_sweep_crop.mp4"
+VIDEO_PATH = r"C:\Users\jessi\MIT Dropbox\Jessica Lam\BUPSY stuff\Test Videos for Optical Flow\good_flow_1.mp4"
 cap = cv2.VideoCapture(VIDEO_PATH)
 
 if not cap.isOpened():
@@ -19,7 +19,7 @@ wait_ms = int(1000 / fps) if fps > 0 else 1
 LOW_S = 60
 LOW_V = 70
 
-LOW_RED_1  = np.array([0,   LOW_S, LOW_V])
+LOW_RED_1  = np.array([0,   LOW_S, LOW_V])  
 HIGH_RED_1 = np.array([20,  255,   255])
 LOW_RED_2  = np.array([160, LOW_S, LOW_V])
 HIGH_RED_2 = np.array([179, 255,   255])

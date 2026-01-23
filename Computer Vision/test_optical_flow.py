@@ -4,13 +4,15 @@ from collections import deque
 
 # ===================== USER PARAMETERS =====================
 
-VIDEO_PATH = r"C:\Users\jessi\MIT Dropbox\Jessica Lam\BUPSY stuff\Test Videos for Optical Flow\Flow_sweep_crop.mp4"
+VIDEO_PATH = r"C:\Users\jessi\MIT Dropbox\Jessica Lam\BUPSY stuff\Test Videos for Optical Flow\good_flow_1.mp4"
 
-FRAME_LAG = 3            # frames between comparisons (reveals slow drift)
-MIN_SPEED = 0.1        # px/frame noise floor
-MAX_SPEED = 2          # px/frame → full green
-MIN_AREA = 500           # pixels; removes spatially isolated noise
-ALPHA_OVERLAY = 0.6
+FRAME_LAG = 5              # frames between flow measurements
+MIN_SPEED = 0.01           # px/frame (numerical noise floor)
+MAX_SPEED = 1            # px/frame → full green
+MIN_AREA = 400             # minimum connected area (pixels)
+CONFIRM_FRAMES = 3         # temporal persistence requirement
+ALPHA_OVERLAY = 0.3        # overlay opacity
+SCALE = 0.5                # downscale for speed (0.5 = 4× faster)
 
 # ==========================================================
 
@@ -28,16 +30,16 @@ ret, frame = cap.read()
 if not ret:
     raise RuntimeError("Could not read first frame")
 
-# Buffer for multi-frame lag
-scale=0.5
-frame = cv.resize(frame, None, fx=scale, fy=scale)
+# Resize immediately (CRITICAL for performance)
+frame = cv.resize(frame, None, fx=SCALE, fy=SCALE)
+
+# Buffer for frame-lag
 gray_buffer = deque()
 
-gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-gray = cv.GaussianBlur(gray, (7, 7), 0)  # helps coherence
-gray_buffer.append(gray)
+# Temporal persistence counter
+motion_count = None
 
-WINDOW_NAME = "Optical Flow (Only Pixels Above Speed Threshold)"
+WINDOW_NAME = "Optical Flow (Temporal + Spatial Filtering)"
 cv.namedWindow(WINDOW_NAME, cv.WINDOW_NORMAL)
 cv.resizeWindow(WINDOW_NAME, 900, 600)
 
@@ -48,13 +50,14 @@ while True:
     ret, frame = cap.read()
     if not ret:
         break
-    scale=0.5
-    frame = cv.resize(frame, None, fx=scale, fy=scale)
+
+    frame = cv.resize(frame, None, fx=SCALE, fy=SCALE)
 
     gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-    gray = cv.GaussianBlur(gray, (5, 5), 0)
+    gray = cv.GaussianBlur(gray, (7, 7), 0)  # safe input blur
     gray_buffer.append(gray)
 
+    # Wait until buffer fills
     if len(gray_buffer) <= FRAME_LAG:
         cv.imshow(WINDOW_NAME, frame)
         cv.waitKey(1)
@@ -68,11 +71,11 @@ while True:
     flow = cv.calcOpticalFlowFarneback(
         gray_old, gray_new, None,
         pyr_scale=0.5,
-        levels=3,
-        winsize=20,
+        levels=4,
+        winsize=31,
         iterations=3,
-        poly_n=5,
-        poly_sigma=1.2,
+        poly_n=7,
+        poly_sigma=1.5,
         flags=cv.OPTFLOW_FARNEBACK_GAUSSIAN
     )
 
@@ -80,43 +83,68 @@ while True:
     mag = np.sqrt(flow[..., 0]**2 + flow[..., 1]**2)
     mag = mag / FRAME_LAG
 
-    # --------- Threshold: what is motion at all? ---------
+    # --------- Initialize temporal counter ---------
+    if motion_count is None:
+        motion_count = np.zeros_like(mag, dtype=np.uint8)
+
+    # --------- Instantaneous motion mask ---------
     motion_mask = mag > MIN_SPEED
 
-    # --------- Spatial Coherence Filtering ---------
+    # --------- TEMPORAL CONSISTENCY FILTER ---------
+    motion_count[motion_mask] += 1
+    motion_count[~motion_mask] = 0
+
+    confirmed_motion = motion_count >= CONFIRM_FRAMES
+
+    # --------- SPATIAL COHERENCE FILTER ---------
     num_labels, labels, stats, _ = cv.connectedComponentsWithStats(
-        motion_mask.astype(np.uint8),
+        confirmed_motion.astype(np.uint8),
         connectivity=8
     )
 
-    clean_mask = np.zeros_like(motion_mask, dtype=np.uint8)
+    clean_mask = np.zeros_like(confirmed_motion, dtype=np.uint8)
 
     for i in range(1, num_labels):  # skip background
         if stats[i, cv.CC_STAT_AREA] >= MIN_AREA:
             clean_mask[labels == i] = 1
 
-    # Keep only coherent motion
+    # Keep only trusted motion
     mag = mag * clean_mask
 
-    # --------- Map speed to color (absolute, no normalization) ---------
+    # --------- Map speed to color (absolute) ---------
     s = np.clip((mag - MIN_SPEED) / (MAX_SPEED - MIN_SPEED), 0, 1)
 
     speed_color = np.zeros_like(frame)
     speed_color[..., 1] = (s * 255).astype(np.uint8)        # Green
     speed_color[..., 2] = ((1 - s) * 255).astype(np.uint8)  # Yellow → green
 
-    # --------- Blend full images once ---------
+    # --------- Blend full image once ---------
     blended = cv.addWeighted(
         frame, 1 - ALPHA_OVERLAY,
         speed_color, ALPHA_OVERLAY,
         0
     )
 
-    # --------- Apply color ONLY where speed > threshold ---------
+    # --------- Apply color ONLY where motion is trusted ---------
     overlay = frame.copy()
-    mask = clean_mask.astype(bool)   # MUST be boolean
+    mask = clean_mask.astype(bool)
 
     overlay[mask] = blended[mask]
+
+    # --------- Overlay video time ---------
+    frame_idx = cap.get(cv.CAP_PROP_POS_FRAMES)
+    video_time = frame_idx / fps
+
+    cv.putText(
+        overlay,
+        f"Video Time: {video_time:6.2f} s",
+        (20, 40),
+        cv.FONT_HERSHEY_SIMPLEX,
+        1.0,
+        (255, 255, 255),
+        2,
+        cv.LINE_AA
+    )
 
     cv.imshow(WINDOW_NAME, overlay)
 
