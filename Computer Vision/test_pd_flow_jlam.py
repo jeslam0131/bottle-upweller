@@ -25,7 +25,7 @@ FRAME_W = 220
 FRAME_H = 700   # ~25 cm physical height
 
 # ============================================================
-# BED COLOR SEGMENTATION (YOUR PROVEN METHOD)
+# BED COLOR SEGMENTATION 
 # ============================================================
 lower = np.array([0, 0, 0])
 upper = np.array([80, 255, 255])
@@ -47,13 +47,28 @@ roi_top_y = None
 # ============================================================
 # MOTION + CONTROL PARAMETERS
 # ============================================================
-V_MOTION = 1.5                 # px/frame
+V_MOTION = 0.5                 # px/frame
 MOTION_WINDOW_SEC = 1.0
 CONTROL_PERIOD = 1.0
-COVERAGE_TARGET = 0.90
+COVERAGE_TARGET = 0.85
 
+# hystersis band
+COVERAGE_BAND = 0.02 # hystersis band
+COVERAGE_MIN = COVERAGE_TARGET-COVERAGE_BAND
+
+#pick between Min coverage value or Setpoint coverage value
+MIN_HYSTERSIS_METHOD = True # set false to use setpoint
+
+#state
+correcting = False # out of hystersis band
+prev_error = 0.0 
+last_control_time = 0.0 
+
+#command controls
 Kp = 300.0
 Kd = 50.0
+
+DELTA_POS_MAX= 5000 #max command per (10,000 limit for valve)
 
 # ============================================================
 # STATE
@@ -172,17 +187,52 @@ while True:
         # PD CONTROLLER (ONCE PER SECOND)
         # ----------------------------------------------------
         if video_time - last_control_time >= CONTROL_PERIOD:
-            error = COVERAGE_TARGET - coverage
-            d_error = error - prev_error
+           
+           #Hystersis Controller 
+            if MIN_HYSTERSIS_METHOD:
+                if correcting:
+                    if coverage >= COVERAGE_TARGET:
+                        correcting = False
+                else:
+                    if coverage < COVERAGE_MIN:
+                        correcting = True
+            else:
+                LOW  = COVERAGE_TARGET - COVERAGE_BAND
+                HIGH = COVERAGE_TARGET + COVERAGE_BAND
 
-            control_command += Kp * error + Kd * d_error
+                if correcting:
+                    if LOW <= coverage <= HIGH:
+                        correcting = False
+                else:
+                    if coverage < LOW or coverage > HIGH:
+                        correcting = True            
+            if correcting:        
+                error = COVERAGE_TARGET - coverage
+                delt_T_err = CONTROL_PERIOD
+                d_error = (error - prev_error)/delt_T_err
 
-            print(
+                delta_pos = Kp*error + Kd*d_error
+                delta_pos = delta_pos = max(-DELTA_POS_MAX, min(delta_pos, DELTA_POS_MAX)) #limits pos to be in max change
+                
+                print(
                 f"t={video_time:6.1f}s  "
                 f"coverage={coverage:5.2f}  "
                 f"error={error:6.3f}  "
-                f"command={control_command:8.1f}"
-            )
+                f"command={delta_pos:8.1f}"
+                )
+                
+                
+            else:
+                delta_pos = 0
+                print(
+                f"t={video_time:6.1f}s  "
+                f"coverage={coverage:5.2f}  "
+                f"error={0}  "
+                f"command={delta_pos:8.1f}"
+                )
+                
+            #send_to_arduino (delta_pos)
+            
 
             prev_error = error
             last_control_time = video_time

@@ -26,13 +26,13 @@ CM_PER_PIXEL = 25 / AOI_H
 lower = np.array([0, 0, 0])
 upper = np.array([80, 255, 255])
 
-alpha = 0.3
+alpha = 0.2
 smooth_top = None
 
 history = deque()
 WINDOW_SECONDS = 3.0
 
-SETPOINT = 12.75
+SETPOINT = 13.5
 TOLERANCE = 0.5
 Kp = 20
 Kd = 8
@@ -72,7 +72,7 @@ while True:
         cv2.rectangle(frame_disp,
                       (AOI_X, AOI_Y),
                       (AOI_X + AOI_W, AOI_Y + AOI_H),
-                      (0, 0, 255), 1)
+                      (0, 0, 255), 3)
 
         roi = frame[AOI_Y:AOI_Y+AOI_H, AOI_X:AOI_X+AOI_W]
         if roi.size == 0:
@@ -86,9 +86,9 @@ while True:
         mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
         mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
 
-        # Ignore top 10%
+        # Ignore top 15%
         valid_mask = mask.copy()
-        valid_mask[:int(AOI_H*0.10), :] = 0
+        valid_mask[:int(AOI_H*0.15), :] = 0
 
         ys, xs = np.where(valid_mask == 255)
         roi_marked = roi.copy()
