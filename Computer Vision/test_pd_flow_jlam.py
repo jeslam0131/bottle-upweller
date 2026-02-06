@@ -17,7 +17,7 @@ cv2.namedWindow("Control View", cv2.WINDOW_NORMAL)
 cv2.resizeWindow("Control View", 900, 700)
 
 # ============================================================
-# FRAME OF INTEREST (FOI) — HARD CODED
+# FRAME OF INTEREST (FOI) — HARD CODED (will likely switch to a png overlay with april tags)
 # ============================================================
 FRAME_X = 800
 FRAME_Y = 350
@@ -25,7 +25,7 @@ FRAME_W = 220
 FRAME_H = 700   # ~25 cm physical height
 
 # ============================================================
-# BED COLOR SEGMENTATION 
+# BED COLOR SEGMENTATION
 # ============================================================
 lower = np.array([0, 0, 0])
 upper = np.array([80, 255, 255])
@@ -38,19 +38,19 @@ alpha = 0.3
 smoothed_bed_height_y = None
 
 # ============================================================
-# ROI UPDATE TIMING
+# ROI UPDATE TIMING (update the area of interest- bottom half of the fluidized bed  once every 60 seconds)
 # ============================================================
 ROI_UPDATE_PERIOD = 60.0
 last_roi_update = 0.0
 roi_top_y = None
 
 # ============================================================
-# MOTION + CONTROL PARAMETERS
+# MOTION + CONTROL PARAMETERS 
 # ============================================================
-V_MOTION = 0.5                 # px/frame
-MOTION_WINDOW_SEC = 1.0
-CONTROL_PERIOD = 1.0
-COVERAGE_TARGET = 0.85
+V_MOTION = 0.5                 # px/frame that triggers go (will switch this to probably mm/sec or something in the future)
+MOTION_WINDOW_SEC = 1.0        # period of time (sec) data is collected to determine if a pixel has moved above the threshold
+CONTROL_PERIOD = 1.0           # time between commands sent to arduino in second
+COVERAGE_TARGET = 0.85         # ideal % of area of interst 
 
 # hystersis band
 COVERAGE_BAND = 0.02 # hystersis band
