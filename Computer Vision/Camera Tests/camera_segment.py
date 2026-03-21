@@ -2,14 +2,18 @@ import cv2
 import numpy as np
 
 # Initialize the webcam feed (0 is default camera)
-VIDEO_PATH = r"C:\Users\jessi\MIT Dropbox\Jessica Lam\BUPSY stuff\Test Videos for Optical Flow\Flow_sweep_crop.mp4"
+#VIDEO_PATH = r"C:\Users\jessi\MIT Dropbox\Jessica Lam\BUPSY stuff\Test Videos for Optical Flow\Flow_sweep_crop.mp4"
+VIDEO_PATH=1
 cap = cv2.VideoCapture(VIDEO_PATH)
 if not cap.isOpened():
     raise RuntimeError("Could not open video")
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 960)
 #cap = cv2.VideoCapture(0)
 
 # Create a window for the sliders
 cv2.namedWindow('Control Panel')
+
 
 # Define the initial values for the trackbars (default values)
 initial_values = [0, 120, 70, 10, 255, 255]

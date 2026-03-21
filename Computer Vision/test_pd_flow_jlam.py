@@ -34,8 +34,10 @@ kernel = np.ones((5, 5), np.uint8)
 # ============================================================
 # BED HEIGHT SMOOTHING
 # ============================================================
-alpha = 0.3
+alpha = 0.3 # Exponential Moving Average 
 smoothed_bed_height_y = None
+height_ignore = 0.5 #top percent of bed to ignore
+
 
 # ============================================================
 # ROI UPDATE TIMING (update the area of interest- bottom half of the fluidized bed  once every 60 seconds)
@@ -47,6 +49,8 @@ roi_top_y = None
 # ============================================================
 # MOTION + CONTROL PARAMETERS 
 # ============================================================
+
+# Lower Bed control parameters
 V_MOTION = 0.5                 # px/frame that triggers go (will switch this to probably mm/sec or something in the future)
 MOTION_WINDOW_SEC = 1.0        # period of time (sec) data is collected to determine if a pixel has moved above the threshold
 CONTROL_PERIOD = 1.0           # time between commands sent to arduino in second
@@ -60,13 +64,16 @@ COVERAGE_MIN = COVERAGE_TARGET-COVERAGE_BAND
 MIN_HYSTERSIS_METHOD = True # set false to use setpoint
 
 #state
-correcting = False # out of hystersis band
+correcting = False # false = in hystersis band | true = out of hystersis band
 prev_error = 0.0 
 last_control_time = 0.0 
 
-#command controls
-Kp = 300.0
-Kd = 50.0
+#command controls lower bed
+Kp_lb = 300.0
+Kd_lb = 50.0
+DELTA_POS_LB_MAX= 5000
+
+
 
 DELTA_POS_MAX= 5000 #max command per (10,000 limit for valve)
 
@@ -75,8 +82,6 @@ DELTA_POS_MAX= 5000 #max command per (10,000 limit for valve)
 # ============================================================
 prev_gray = None
 motion_buffer = deque()   # stores (time, moved_mask)
-last_control_time = 0.0
-prev_error = 0.0
 control_command = 0.0
 
 # ============================================================
@@ -91,7 +96,7 @@ while True:
     display = camera_frame.copy()
 
     # --------------------------------------------------------
-    # DRAW FRAME OF INTEREST
+    # DRAW FRAME OF INTEREST // will be swaped out with april tag
     # --------------------------------------------------------
     cv2.rectangle(
         display,
@@ -102,7 +107,7 @@ while True:
     )
 
     # --------------------------------------------------------
-    # EXTRACT FRAME OF INTEREST
+    # EXTRACT FRAME OF INTEREST / maksed by png
     # --------------------------------------------------------
     frame = camera_frame[
         FRAME_Y:FRAME_Y + FRAME_H,
@@ -110,7 +115,7 @@ while True:
     ]
 
     # --------------------------------------------------------
-    # BED HEIGHT DETECTION
+    # BED HEIGHT DETECTION 
     # --------------------------------------------------------
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     mask = cv2.inRange(hsv, lower, upper)
@@ -127,7 +132,7 @@ while True:
             break
         continue
 
-    measured_top_y = int(np.min(ys))
+    measured_top_y = int(np.percentile(ys, 0.5))
 
     if smoothed_bed_height_y is None:
         smoothed_bed_height_y = measured_top_y
@@ -188,7 +193,7 @@ while True:
         # ----------------------------------------------------
         if video_time - last_control_time >= CONTROL_PERIOD:
            
-           #Hystersis Controller 
+           #Hystersis band bottom 50% of bed 
             if MIN_HYSTERSIS_METHOD:
                 if correcting:
                     if coverage >= COVERAGE_TARGET:
@@ -205,13 +210,14 @@ while True:
                         correcting = False
                 else:
                     if coverage < LOW or coverage > HIGH:
-                        correcting = True            
+                        correcting = True 
+            #PD controller bottom 50% of bed                       
             if correcting:        
                 error = COVERAGE_TARGET - coverage
                 delt_T_err = CONTROL_PERIOD
                 d_error = (error - prev_error)/delt_T_err
 
-                delta_pos = Kp*error + Kd*d_error
+                delta_pos = Kp_lb*error + Kd_lb*d_error
                 delta_pos = delta_pos = max(-DELTA_POS_MAX, min(delta_pos, DELTA_POS_MAX)) #limits pos to be in max change
                 
                 print(
